@@ -9,6 +9,26 @@ let catalog = null,
   revision = 0,
   importRevision = 0,
   controller = null;
+function lineNumbers() {
+  $('line-numbers').textContent = $('sql')
+    .value.split('\n')
+    .map((_, index) => index + 1)
+    .join('\n');
+  $('line-numbers').scrollTop = $('sql').scrollTop;
+}
+$('sql').addEventListener('scroll', () => {
+  $('line-numbers').scrollTop = $('sql').scrollTop;
+});
+$('sql').addEventListener('input', lineNumbers);
+for (const button of document.querySelectorAll('[data-output]'))
+  button.addEventListener('click', () => {
+    for (const view of ['plans', 'rows']) {
+      $(view + '-view').hidden = view !== button.dataset.output;
+      document
+        .querySelector(`[data-output="${view}"]`)
+        .setAttribute('aria-pressed', String(view === button.dataset.output));
+    }
+  });
 async function api(path, data, signal) {
   const response = await fetch(path, {
     method: data ? 'POST' : 'GET',
@@ -83,6 +103,7 @@ function invalidate(message = 'Experiment changed. Run the comparison again.') {
 }
 function setStudy(data) {
   $('sql').value = data.sql;
+  lineNumbers();
   $('parameters').value = JSON.stringify(data.parameters, null, 2);
   for (const input of $('indexes').querySelectorAll('input'))
     input.checked = data.indexes.includes(input.value);

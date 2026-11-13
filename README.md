@@ -17,6 +17,7 @@ Every experiment creates two fresh in-memory databases with 1,000 synthetic cust
 ## Explore
 
 - Start with customer history, status/date filtering, high-value orders, or a regional join/aggregation.
+- The SQL editor and index selector share the main workspace. Execution plans and result rows have separate output views.
 - Edit a read-only SQL statement and bind named parameters through a separate JSON object. Ctrl/Cmd+Enter runs the comparison.
 - Enable a customer/date covering index, status/date covering index, or amount-ordering index. Inspect their exact DDL in the sidebar.
 - Compare raw `EXPLAIN QUERY PLAN` descriptions, median preview times, estimated VM instructions, index-build time, and allocated index pages.
@@ -52,7 +53,7 @@ This is a bounded teaching tool over a fixed fixture, not a production database 
 ```json
 {
   "sql": "SELECT id FROM orders WHERE customer_id = :customer ORDER BY id",
-  "parameters": {"customer": 42},
+  "parameters": { "customer": 42 },
   "indexes": ["customer"]
 }
 ```

@@ -9,17 +9,10 @@
   </head>
   <body>
     <header>
-      <a href="/">QUERY / QUARRY</a><span>DATABASE SYSTEMS · 15</span
-      ><span id="version">SQLite</span>
+      <h1>Query Quarry</h1>
+      <span id="version">SQLite</span>
     </header>
     <main>
-      <div class="intro">
-        <div>
-          <p class="kicker">A SMALL LAB FOR A BETTER QUERY</p>
-          <h1>Dig into the plan.</h1>
-        </div>
-        <p>1,000 customers. 6,000 orders.<br />Identical data. Different indexes.</p>
-      </div>
       <div class="workbench">
         <section>
           <div class="editor-head">
@@ -31,13 +24,16 @@
               <option value="join">Regional aggregation</option>
             </select>
           </div>
-          <textarea
-            id="sql"
-            aria-label="SQL query"
-            spellcheck="false"
-            rows="8"
-            maxlength="4000"
-          ></textarea>
+          <div class="sql-shell">
+            <pre id="line-numbers" aria-hidden="true"></pre>
+            <textarea
+              id="sql"
+              aria-label="SQL query"
+              spellcheck="false"
+              rows="8"
+              maxlength="4000"
+            ></textarea>
+          </div>
           <details>
             <summary>Named parameters</summary>
             <textarea
@@ -52,7 +48,7 @@
             </p>
           </details>
           <div class="actions">
-            <button id="run" class="primary">Run comparison ↗</button
+            <button id="run" class="primary">Run comparison</button
             ><button id="save">Save experiment</button
             ><label class="file"
               >Open experiment<input id="import" type="file" accept=".json,application/json"
@@ -81,29 +77,36 @@
       </div>
       <p id="status" role="status">Loading query lab…</p>
       <section id="results" hidden>
-        <div id="plans" class="plans"></div>
-        <p id="equality" class="equality"></p>
-        <details>
-          <summary>Measurement notes</summary>
-          <p class="hint">
-            One warm-up, then three monitored execute-and-fetch runs per variant. Median timing
-            covers at most 101 rows fetched; only 100 are displayed. VM work is an estimate in
-            1,000-instruction increments. Setup and index construction are excluded from query
-            timing. Progress monitoring adds overhead, and timing varies by host. These are
-            illustrative local measurements.
-          </p>
-        </details>
-        <div class="result-head">
-          <h2>Result preview</h2>
-          <select id="variant" aria-label="Result variant">
-            <option value="indexed">With selected indexes</option>
-            <option value="baseline">Baseline</option></select
-          ><button id="csv">CSV preview</button><button id="report">JSON report</button>
+        <nav class="result-tabs" aria-label="Query output">
+          <button data-output="plans" aria-pressed="true">Execution plans</button
+          ><button data-output="rows" aria-pressed="false">Result rows</button>
+        </nav>
+        <div id="plans-view">
+          <div id="plans" class="plans"></div>
+          <p id="equality" class="equality"></p>
+          <details>
+            <summary>Measurement notes</summary>
+            <p class="hint">
+              One warm-up, then three monitored execute-and-fetch runs per variant. Median timing
+              covers at most 101 rows fetched; only 100 are displayed. VM work is an estimate in
+              1,000-instruction increments. Setup and index construction are excluded from query
+              timing. Progress monitoring adds overhead, and timing varies by host. These are
+              illustrative local measurements.
+            </p>
+          </details>
         </div>
-        <p id="row-status" class="hint"></p>
-        <div class="scroll"><table id="table"></table></div>
+        <div id="rows-view" hidden>
+          <div class="result-head">
+            <h2>Result preview</h2>
+            <select id="variant" aria-label="Result variant">
+              <option value="indexed">With selected indexes</option>
+              <option value="baseline">Baseline</option></select
+            ><button id="csv">CSV preview</button><button id="report">JSON report</button>
+          </div>
+          <p id="row-status" class="hint"></p>
+          <div class="scroll"><table id="table"></table></div>
+        </div>
       </section>
-      <footer>REAL SQLITE / REPRODUCIBLE SYNTHETIC DATA / BOUNDED READ-ONLY EXECUTION</footer>
     </main>
   </body>
 </html>
