@@ -124,7 +124,7 @@ def experiment(sql,parameters,indexes,step_limit=300000):
             elapsed=(time.perf_counter()-started)*1000
             cursor.close()
             if repetition:
-                samples.append({'milliseconds':elapsed,'vm_steps_lower_bound':instructions})
+                samples.append({'milliseconds':elapsed,'vm_steps_estimate':instructions})
         rows=[]
         clipped=0
         for row in last_rows[:100]:
@@ -142,7 +142,7 @@ def experiment(sql,parameters,indexes,step_limit=300000):
         return {'error':None,'indexes':indexes,'plan':plan,'columns':columns,'rows':rows,
                 'truncated':len(last_rows)>100,'clipped_cells':clipped,'samples':samples,
                 'median_ms':statistics.median(s['milliseconds'] for s in samples),
-                'vm_steps_lower_bound':samples[-1]['vm_steps_lower_bound'],**storage}
+                'vm_steps_estimate':samples[-1]['vm_steps_estimate'],**storage}
     except (sqlite3.Error,ValueError,OverflowError) as error:
         message='Query exceeded its VM-instruction or time budget.' if 'interrupted' in str(error) else str(error)
         return {'error':message,'indexes':indexes,**storage}
@@ -174,3 +174,4 @@ EXAMPLES={
 
 CATALOG={'schema':SCHEMA,'indexes':INDEXES,'examples':EXAMPLES,'functions':sorted(FUNCTIONS),
          'customers':1000,'orders':6000,'sqlite_version':sqlite3.sqlite_version}
+

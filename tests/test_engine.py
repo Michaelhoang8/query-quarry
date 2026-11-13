@@ -11,7 +11,7 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(result['comparison']['complete_unclipped_results'])
         self.assertTrue(any('SCAN orders' in p['detail'] for p in result['baseline']['plan']))
         self.assertTrue(any('idx_orders_customer' in p['detail'] for p in result['indexed']['plan']))
-        self.assertLess(result['indexed']['vm_steps_lower_bound'],result['baseline']['vm_steps_lower_bound'])
+        self.assertLess(result['indexed']['vm_steps_estimate'],result['baseline']['vm_steps_estimate'])
         self.assertGreater(result['indexed']['allocated_index_bytes'],0)
         self.assertEqual(len(result['indexed']['samples']),3)
 
@@ -63,3 +63,4 @@ class EngineTests(unittest.TestCase):
 
 
 if __name__=='__main__': unittest.main()
+

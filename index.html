@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Query Quarry — SQLite index lab</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/">QUERY / QUARRY</a><span>DATABASE SYSTEMS · 15</span
+      ><span id="version">SQLite</span>
+    </header>
+    <main>
+      <div class="intro">
+        <div>
+          <p class="kicker">A SMALL LAB FOR A BETTER QUERY</p>
+          <h1>Dig into the plan.</h1>
+        </div>
+        <p>1,000 customers. 6,000 orders.<br />Identical data. Different indexes.</p>
+      </div>
+      <div class="workbench">
+        <section>
+          <div class="editor-head">
+            <h2>SQL workspace</h2>
+            <select id="example" aria-label="Query example">
+              <option value="customer">Customer order history</option>
+              <option value="status">Status and date filter</option>
+              <option value="amount">High-value orders</option>
+              <option value="join">Regional aggregation</option>
+            </select>
+          </div>
+          <textarea
+            id="sql"
+            aria-label="SQL query"
+            spellcheck="false"
+            rows="8"
+            maxlength="4000"
+          ></textarea>
+          <details>
+            <summary>Named parameters</summary>
+            <textarea
+              id="parameters"
+              aria-label="Parameters JSON"
+              spellcheck="false"
+              rows="4"
+            ></textarea>
+            <p class="hint">
+              Use :name in SQL and a JSON object here. Values are bound separately from the
+              statement.
+            </p>
+          </details>
+          <div class="actions">
+            <button id="run" class="primary">Run comparison ↗</button
+            ><button id="save">Save experiment</button
+            ><label class="file"
+              >Open experiment<input id="import" type="file" accept=".json,application/json"
+            /></label>
+          </div>
+        </section>
+        <aside>
+          <h2>Candidate indexes</h2>
+          <p class="hint">
+            The baseline has primary keys only. Add secondary indexes to the comparison database.
+          </p>
+          <div id="indexes"></div>
+          <details>
+            <summary>Fixture schema</summary>
+            <pre id="schema"></pre>
+          </details>
+          <details>
+            <summary>Available SQL functions</summary>
+            <p id="functions" class="hint"></p>
+          </details>
+          <p class="hint">
+            Single read-only statement. Automatic indexes are disabled in both variants. Each run
+            uses fresh in-memory databases.
+          </p>
+        </aside>
+      </div>
+      <p id="status" role="status">Loading query lab…</p>
+      <section id="results" hidden>
+        <div id="plans" class="plans"></div>
+        <p id="equality" class="equality"></p>
+        <details>
+          <summary>Measurement notes</summary>
+          <p class="hint">
+            One warm-up, then three monitored execute-and-fetch runs per variant. Median timing
+            covers at most 101 rows fetched; only 100 are displayed. VM work is an estimate in
+            1,000-instruction increments. Setup and index construction are excluded from query
+            timing. Progress monitoring adds overhead, and timing varies by host. These are
+            illustrative local measurements.
+          </p>
+        </details>
+        <div class="result-head">
+          <h2>Result preview</h2>
+          <select id="variant" aria-label="Result variant">
+            <option value="indexed">With selected indexes</option>
+            <option value="baseline">Baseline</option></select
+          ><button id="csv">CSV preview</button><button id="report">JSON report</button>
+        </div>
+        <p id="row-status" class="hint"></p>
+        <div class="scroll"><table id="table"></table></div>
+      </section>
+      <footer>REAL SQLITE / REPRODUCIBLE SYNTHETIC DATA / BOUNDED READ-ONLY EXECUTION</footer>
+    </main>
+  </body>
+</html>
